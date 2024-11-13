@@ -1,20 +1,19 @@
+// src/NoteList.js
 import React from 'react';
-function NoteList({ notes, deleteNote }) {
-    const handleDelete = (id) => {
-        deleteNote(id);
-    };
+import { Link } from 'react-router-dom';
 
-    return React.createElement('div', null,
-        notes.length === 0
-            ? React.createElement('p', null, 'No notes available.')
-            : notes.map(note => React.createElement('div', {
-                key: note.id,
-                style: { border: '1px solid #ccc', padding: '10px', margin: '10px 0' }
-            },
-                React.createElement('p', null, note.text),
-                React.createElement('p', null, React.createElement('strong', null, 'Tag: '), note.tag),
-                React.createElement('button', { onClick: () => handleDelete(note.id) }, 'Delete')
-            ))
+function NoteList({ notes, deleteNote }) {
+    return (
+        <div>
+            {notes.map((note) => (
+                <div key={note.id} style={{ marginBottom: '20px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
+                    <h2>{note.title}</h2>
+                    <p>{note.content.slice(0, 100)}...</p> {/* Preview of content */}
+                    <Link to={`/note/${note.id}`}>View Details</Link> {/* Link to note details */}
+                    <button onClick={() => deleteNote(note.id)}>Delete</button>
+                </div>
+            ))}
+        </div>
     );
 }
 

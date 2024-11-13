@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 
 function NoteForm({ onAddNote }) {
-    const [note, setNote] = useState('');
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (note.trim()) {
-            onAddNote(note); // Call the onAddNote function passed from App.js
-            setNote(''); // Clear the input after submission
+        if (title.trim() && content.trim()) {
+            onAddNote({ title, content }); // Send both title and content to App.js
+            setTitle('');
+            setContent('');
         }
     };
 
@@ -15,8 +17,13 @@ function NoteForm({ onAddNote }) {
         <form onSubmit={handleSubmit}>
             <input
                 type="text"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Note Title"
+            />
+            <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
                 placeholder="Write your note..."
             />
             <button type="submit">Add Note</button>
