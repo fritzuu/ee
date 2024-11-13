@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes, Link, useLocation } from 'react-router-dom';
 import NoteList from './NoteList';
 import CreateNote from './CreateNote';
 import NoteDetail from './NoteDetail';
 
 function App() {
     const [notes, setNotes] = useState([]);
+    const location = useLocation(); // Get the current route location
 
-    // Load notes from local storage on page load
+    // Load notes from localStorage
     useEffect(() => {
         const storedNotes = JSON.parse(localStorage.getItem('notes'));
         if (storedNotes) {
@@ -15,33 +16,46 @@ function App() {
         }
     }, []);
 
-    // Save notes to local storage whenever the notes list changes
+    // Save notes to localStorage whenever notes change
     useEffect(() => {
-        localStorage.setItem('notes', JSON.stringify(notes));
+        if (notes.length > 0) {
+            localStorage.setItem('notes', JSON.stringify(notes));
+        }
     }, [notes]);
 
-    const addNote = (newNote) => {
-        setNotes([...notes, newNote]);
+    const addNote = (note) => {
+        setNotes([...notes, note]);
+    };
+
+    const deleteNote = (id) => {
+        const updatedNotes = notes.filter(note => note.id !== id);
+        setNotes(updatedNotes);
     };
 
     return (
-        <Router>
-            <div className="App">
-                <nav className="bg-indigo-600 p-4">
-                    <div className="container mx-auto flex justify-between">
-                        <Link to="/" className="text-white text-lg font-semibold">Note Manager</Link>
-                        <Link to="/create" className="text-white text-lg">Create New Note</Link>
-                    </div>
-                </nav>
-                <div className="container mx-auto mt-6">
-                    <Routes>
-                        <Route path="/" element={<NoteList notes={notes} />} />
-                        <Route path="/create" element={<CreateNote addNote={addNote} />} />
-                        <Route path="/note/:id" element={<NoteDetail notes={notes} />} />
-                    </Routes>
+        <div className="max-w-3xl mx-auto p-4 bg-white">
+            {/* Navbar */}
+            <nav className="flex justify-between items-center p-4 bg-indigo-600 text-white rounded-md mb-6 shadow-md">
+                <div className="flex items-center">
+                    <h1 className="text-2xl font-semibold">Note Manager</h1>
                 </div>
-            </div>
-        </Router>
+                <div className="flex space-x-4">
+                    {/* Always render "Home" and "Create Note" buttons */}
+                    <Link to="/" className="text-white hover:bg-indigo-700 px-4 py-2 rounded-md">
+                        Home
+                    </Link>
+                    {location.pathname !== '/create' && (
+                        <Link to="/create" className="text-white hover:bg-indigo-700 px-4 py-2 rounded-md">Create Note</Link>
+                    )}
+                </div>
+            </nav>
+
+            <Routes>
+                <Route path="/" element={<NoteList notes={notes} />} />
+                <Route path="/create" element={<CreateNote addNote={addNote} />} />
+                <Route path="/note/:id" element={<NoteDetail notes={notes} />} />
+            </Routes>
+        </div>
     );
 }
 
