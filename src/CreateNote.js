@@ -17,7 +17,7 @@ function CreateNote({ addNote }) {
                 date: new Date().toLocaleString(),
             };
 
-            // Add the new note using the function passed from App.js
+            // Add the new note
             addNote(newNote);
 
             // Redirect to the home page after adding the note
