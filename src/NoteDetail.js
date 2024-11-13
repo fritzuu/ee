@@ -1,21 +1,34 @@
-// src/NoteDetail.js
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 function NoteDetail() {
-    const { id } = useParams(); // Get the note ID from the URL
-    const notes = JSON.parse(localStorage.getItem('notes')); // Get the stored notes from localStorage
-    const note = notes ? notes.find((note) => note.id === id) : null; // Find the note by ID
+    const { id } = useParams();
+    const notes = JSON.parse(localStorage.getItem('notes'));
+    const note = notes ? notes.find((note) => note.id === id) : null;
 
     if (!note) {
-        return <p>Note not found</p>; // Show message if note is not found
+        return (
+            <div className="max-w-3xl mx-auto p-4">
+                <p className="text-center text-red-500">Note not found</p>
+            </div>
+        );
     }
 
     return (
-        <div>
-            <h2>{note.title}</h2>
-            <p>{note.content}</p> {/* Display full content */}
-            <p><strong>Created on:</strong> {note.date}</p>
+        <div className="max-w-3xl mx-auto p-4 bg-white rounded-lg shadow-md">
+            <Link
+                to="/"
+                className="inline-block text-indigo-600 hover:text-indigo-800 mb-4"
+            >
+                &lt; Back to Notes
+            </Link>
+            <h2 className="text-3xl font-bold text-center mb-4 text-indigo-700">{note.title}</h2>
+            <p className="text-sm text-gray-500 text-center mb-4">
+                Created on: {note.date}
+            </p>
+            <div className="prose text-gray-800">
+                <p>{note.content}</p>
+            </div>
         </div>
     );
 }

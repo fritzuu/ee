@@ -1,42 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import NoteForm from './NoteForm';
 import NoteList from './NoteList';
 import NoteDetail from './NoteDetail';
+import CreateNote from './CreateNote';
 
 function App() {
-    // State to store the notes
     const [notes, setNotes] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Load notes from localStorage on initial load
+    // Load notes from localStorage when the app starts
     useEffect(() => {
-        const storedNotes = JSON.parse(localStorage.getItem('notes'));
-        if (storedNotes) setNotes(storedNotes); // If notes exist in localStorage, set them in state
+        const storedNotes = JSON.parse(localStorage.getItem('notes')) || [];
+        setNotes(storedNotes);
     }, []);
 
-    // Save notes to localStorage whenever the notes state changes
-    useEffect(() => {
-        if (notes.length > 0) {
-            localStorage.setItem('notes', JSON.stringify(notes));
-        }
-    }, [notes]);
-
     // Function to add a new note
-    const addNote = (noteContent) => {
-        const newNote = {
-            id: Date.now().toString(), // Unique ID for each note
-            title: noteContent.title,
-            content: noteContent.content,
-            date: new Date().toLocaleString(),
-        };
-        setNotes([...notes, newNote]); // Add the new note to the notes state
-    };
-
-    // Function to delete a note
-    const deleteNote = (id) => {
-        const updatedNotes = notes.filter((note) => note.id !== id);
-        setNotes(updatedNotes); // Remove the deleted note from the state
+    const addNote = (newNote) => {
+        const updatedNotes = [...notes, newNote];
+        setNotes(updatedNotes);
+        localStorage.setItem('notes', JSON.stringify(updatedNotes)); // Persist notes in localStorage
     };
 
     // Filter notes based on search term
@@ -47,21 +29,34 @@ function App() {
 
     return (
         <Router>
-            <div>
-                <h1>Note Manager</h1>
-                <NoteForm onAddNote={addNote} />
-                <input
-                    type="text"
-                    placeholder="Search notes..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
+            <div className="container mx-auto p-4">
+                <h1 className="text-4xl font-bold text-center text-indigo-600 mb-6">Note Manager</h1>
+
+                {/* Search bar */}
+                <div className="mb-4">
+                    <input
+                        type="text"
+                        placeholder="Search notes..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                </div>
+
+                {/* Routes for different pages */}
                 <Routes>
                     <Route
                         path="/"
-                        element={<NoteList notes={filteredNotes} deleteNote={deleteNote} />}
+                        element={<NoteList notes={filteredNotes} />}
                     />
-                    <Route path="/note/:id" element={<NoteDetail />} />
+                    <Route
+                        path="/note/:id"
+                        element={<NoteDetail />}
+                    />
+                    <Route
+                        path="/create"
+                        element={<CreateNote addNote={addNote} />}
+                    />
                 </Routes>
             </div>
         </Router>
