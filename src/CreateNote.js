@@ -40,11 +40,18 @@ function CreateNote({ addNote }) {
                 />
                 <button
                     type="submit"
-                    className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+                    className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 mb-4"
                 >
                     Save Note
                 </button>
             </form>
+            {/* Back to Home button */}
+            <button
+                onClick={() => navigate('/')}
+                className="w-full bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
+            >
+                Back to Home
+            </button>
         </div>
     );
 }

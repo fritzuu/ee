@@ -39,15 +39,6 @@ function App() {
                 <div className="flex items-center">
                     <h1 className="text-2xl font-semibold">Note Manager</h1>
                 </div>
-                <div className="flex space-x-4">
-                    {/* Always render "Home" and "Create Note" buttons */}
-                    <Link to="/" className="text-white hover:bg-indigo-700 px-4 py-2 rounded-md">
-                        Home
-                    </Link>
-                    {location.pathname !== '/create' && (
-                        <Link to="/create" className="text-white hover:bg-indigo-700 px-4 py-2 rounded-md">Create Note</Link>
-                    )}
-                </div>
             </nav>
 
             <Routes>
